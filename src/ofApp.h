@@ -36,5 +36,7 @@ private:
 	bool bCalibrationMode;
 
 	bool bShowWarning;
+
+	bool bRunning;
 	
 };

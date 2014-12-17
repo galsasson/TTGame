@@ -69,6 +69,14 @@ void Mattress::draw()
 void Mattress::drawDebug()
 {
 	ofFill();
+	ofSetColor(0, 255, 0);
+	ofBeginShape();
+	ofVertex(points[0].x, points[0].y);
+	ofVertex(points[2].x, points[2].y);
+	ofVertex(points[3].x, points[3].y);
+	ofVertex(points[1].x, points[1].y);
+	ofEndShape(true);
+
 	ofSetColor(0, 0, 255);
 	ofEllipse(points[0], 0.03, 0.03);
 	ofEllipse(points[2], 0.03, 0.03);

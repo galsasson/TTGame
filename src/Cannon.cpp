@@ -8,7 +8,7 @@
 
 #include "Cannon.h"
 
-#define RAIN_SIZE		0.005
+#define RAIN_SIZE		0.02
 
 void Cannon::setup()
 {
@@ -37,7 +37,7 @@ void Cannon::update(float dt)
 void Cannon::draw()
 {
 	ofFill();
-	ofSetColor(255, 100);
+	ofSetColor(255, 180);
 	for (int i=0; i<circles.size(); i++) {
 //		ofEllipse(0.5, 0.5, 10, 10);
 		ofEllipse(circles[i], RAIN_SIZE, RAIN_SIZE);

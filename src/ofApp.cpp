@@ -20,6 +20,7 @@ void ofApp::setup(){
 	platforms.setup();
 
 	bShowWarning = false;
+	bRunning = false;
 
 }
 
@@ -29,11 +30,12 @@ void ofApp::update(){
 
 	tactonic.update();
 
-	cannon.update(DT);
-
 	mat.update(DT);
 
-	platforms.update(DT);
+	if (bRunning) {
+		cannon.update(DT);
+		platforms.update(DT);
+	}
 
 	vector<ofVec3f> worldForce = mat.getWorldForcePoints();
 	bShowWarning = platforms.isOneForceOffPlatforms(worldForce);
@@ -91,6 +93,9 @@ void ofApp::keyPressed(int key){
 	}
 	else if (key == 'm') {
 		CGDisplayShowCursor(kCGDirectMainDisplay);
+	}
+	else if (key == ' ') {
+		bRunning = !bRunning;
 	}
 }
 
