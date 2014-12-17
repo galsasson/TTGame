@@ -20,6 +20,8 @@ public:
 
 	bool setup();
 
+	void stop();
+
 	void update();
 	void draw();
 

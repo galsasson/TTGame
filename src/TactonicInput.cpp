@@ -24,7 +24,7 @@ bool TactonicInput::setup()
 	nCols = device.getWidth();
 	nRows = device.getHeight();
 
-	allocateFbo();
+//	allocateFbo();
 
 	device.start();
 
@@ -33,6 +33,12 @@ bool TactonicInput::setup()
 	bHasDevice = true;
 
 	return true;
+}
+
+void TactonicInput::stop()
+{
+	ofRemoveListener(ofxTactonic::eventNewFrame, this, &TactonicInput::onTactonicFrame);
+	device.stop();
 }
 
 vector<ofVec3f> TactonicInput::getForcePoints()
@@ -52,14 +58,13 @@ vector<ofVec3f> TactonicInput::getForcePoints()
 	return forces;
 }
 
-
 void TactonicInput::update()
 {
 	if (!bHasDevice) {
 		return;
 	}
 
-	renderFbo(frame);
+//	renderFbo(frame);
 }
 
 void TactonicInput::draw()
@@ -78,8 +83,8 @@ void TactonicInput::onTactonicFrame(TactonicFrameEvent &evt)
 	mutex.unlock();
 
 	float max = 0;
-	ofVec2f centerOfMass;
 	float totalForce;
+	centerOfMass.set(0, 0);
 
 	for (int y=0; y<frame->rows; y++) {
 		for (int x=0; x<frame->cols; x++) {

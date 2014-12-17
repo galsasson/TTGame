@@ -7,20 +7,29 @@ void ofApp::setup(){
 	ofEnableAlphaBlending();
 	ofSetFrameRate(60);
 
+	RUI_SETUP();
+
+
+
+
 	bCalibrationMode = false;
+	game.setup();
+	game.setupParams();
 
-	tactonic.setup();
 
-	mat.setup(&tactonic);
 
-	calibration.setup();
+//	mat.setup(&tactonic);
 
-	cannon.setup();
+//	calibration.setup();
 
-	platforms.setup();
+//	cannon.setup();
 
-	bShowWarning = false;
+//	platforms.setup();
+
+//	bShowWarning = false;
 	bRunning = false;
+
+	RUI_LOAD_FROM_XML();
 
 }
 
@@ -28,63 +37,18 @@ void ofApp::setup(){
 void ofApp::update(){
 	float DT = 1.0f / 60.0f;
 
-	tactonic.update();
-
-	mat.update(DT);
-
-	if (bRunning) {
-		cannon.update(DT);
-		platforms.update(DT);
-	}
-
-	vector<ofVec3f> worldForce = mat.getWorldForcePoints();
-	bShowWarning = platforms.isOneForceOffPlatforms(worldForce);
+	game.update(DT);
 }
 
 //--------------------------------------------------------------
-void ofApp::draw() {
 
+void ofApp::draw()
+{
 	ofBackground(0);
 
-
-	calibration.begin();
-
-	mat.draw();
-	cannon.draw();
-	platforms.draw();
-
-	if (bShowWarning) {
-		ofSetColor(200, 0, 0);
-		ofFill();
-		ofRect(0, 0, 0.05, 1);
-		ofRect(0, 0, 1, 0.05);
-		ofRect(0.95, 0, 0.05, 1);
-		ofRect(0, 0.95, 1, 0.05);
-	}
-
-	calibration.end();
-
-
-	if (bCalibrationMode) {
-		calibration.draw();
-		calibration.begin();
-		mat.drawDebug();
-		calibration.end();
-	}
-
-
-	// draw mouse
-	ofSetColor(255);
-	ofFill();
-	ofEllipse(ofGetMouseX(), ofGetMouseY(), 3, 3);
-
-//	calibration.begin();
-//
-//	tactonic.draw();
-//
-//	calibration.end();
-
+	game.draw();
 }
+
 
 //--------------------------------------------------------------
 void ofApp::keyPressed(int key){
@@ -96,6 +60,12 @@ void ofApp::keyPressed(int key){
 	}
 	else if (key == ' ') {
 		bRunning = !bRunning;
+		if (bRunning) {
+			game.setSpeed(1000);
+		}
+		else {
+			game.setSpeed(0);
+		}
 	}
 }
 
@@ -111,32 +81,14 @@ void ofApp::mouseMoved(int x, int y ){
 
 //--------------------------------------------------------------
 void ofApp::mouseDragged(int x, int y, int button){
-	if (bCalibrationMode) {
-		calibration.mouseDrag(x, y);
-
-		ofVec2f local = calibration.toWorld(ofVec2f(x, y));
-		mat.mouseDragged(local);
-	}
 }
 
 //--------------------------------------------------------------
 void ofApp::mousePressed(int x, int y, int button){
-	if (bCalibrationMode) {
-		calibration.mouseDown(x, y);
-
-		ofVec2f local = calibration.toWorld(ofVec2f(x, y));
-		mat.mouseDown(local);
-	}
 }
 
 //--------------------------------------------------------------
 void ofApp::mouseReleased(int x, int y, int button){
-	if (bCalibrationMode) {
-		calibration.mouseUp(x, y);
-
-		ofVec2f local = calibration.toWorld(ofVec2f(x, y));
-		mat.mouseUp(local);
-	}
 }
 
 //--------------------------------------------------------------
@@ -152,4 +104,27 @@ void ofApp::gotMessage(ofMessage msg){
 //--------------------------------------------------------------
 void ofApp::dragEvent(ofDragInfo dragInfo){ 
 
+}
+
+
+
+
+//define a callback method to get notifications of client actions
+void ofApp::clientDidSomething(RemoteUIServerCallBackArg &arg){
+
+	switch (arg.action) {
+		case CLIENT_CONNECTED: cout << "CLIENT_CONNECTED" << endl; break;
+		case CLIENT_DISCONNECTED: cout << "CLIENT_DISCONNECTED" << endl; break;
+		case CLIENT_UPDATED_PARAM: cout << "CLIENT_UPDATED_PARAM: "<< arg.paramName << " - ";
+			arg.param.print();
+			break;
+		case CLIENT_DID_SET_PRESET: cout << "CLIENT_DID_SET_PRESET" << endl; break;
+		case CLIENT_SAVED_PRESET: cout << "CLIENT_SAVED_PRESET" << endl; break;
+		case CLIENT_DELETED_PRESET: cout << "CLIENT_DELETED_PRESET" << endl; break;
+		case CLIENT_SAVED_STATE: cout << "CLIENT_SAVED_STATE" << endl; break;
+		case CLIENT_DID_RESET_TO_XML: cout << "CLIENT_DID_RESET_TO_XML" << endl; break;
+		case CLIENT_DID_RESET_TO_DEFAULTS: cout << "CLIENT_DID_RESET_TO_DEFAULTS" << endl; break;
+		default:
+			break;
+	}
 }

@@ -1,11 +1,14 @@
 #pragma once
 
 #include "ofMain.h"
+#include "ofxRemoteUIServer.h"
+
 #include "TactonicInput.h"
 #include "ProjectorCalibration.h"
 #include "Cannon.h"
 #include "Mattress.h"
 #include "Platforms.h"
+#include "GameWorld.h"
 
 class ofApp : public ofBaseApp{
 
@@ -24,18 +27,19 @@ class ofApp : public ofBaseApp{
 		void dragEvent(ofDragInfo dragInfo);
 		void gotMessage(ofMessage msg);
 
+	void clientDidSomething(RemoteUIServerCallBackArg & arg);
 
 private:
-	TactonicInput tactonic;
-	ProjectorCalibration calibration;
-	Cannon cannon;
-	Mattress mat;
-	Platforms platforms;
+	GameWorld game;
+//	ProjectorCalibration calibration;
+//	Cannon cannon;
+//	Mattress mat;
+//	Platforms platforms;
 
 
 	bool bCalibrationMode;
 
-	bool bShowWarning;
+//	bool bShowWarning;
 
 	bool bRunning;
 	
