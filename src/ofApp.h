@@ -3,6 +3,9 @@
 #include "ofMain.h"
 #include "TactonicInput.h"
 #include "ProjectorCalibration.h"
+#include "Cannon.h"
+#include "Mattress.h"
+#include "Platforms.h"
 
 class ofApp : public ofBaseApp{
 
@@ -25,5 +28,13 @@ class ofApp : public ofBaseApp{
 private:
 	TactonicInput tactonic;
 	ProjectorCalibration calibration;
+	Cannon cannon;
+	Mattress mat;
+	Platforms platforms;
+
+
+	bool bCalibrationMode;
+
+	bool bShowWarning;
 	
 };

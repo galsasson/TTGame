@@ -9,7 +9,7 @@
 #include "ProjectorCalibration.h"
 
 
-#define POINT_SIZE	0.03
+#define POINT_SIZE	0.01
 
 void ProjectorCalibration::setup()
 {
@@ -39,9 +39,10 @@ void ProjectorCalibration::draw()
 	}
 
 	// draw grid
+	ofSetColor(255, 50);
 	ofMultMatrix(projectionMat);
-	ofSetLineWidth(2);
-	for (float i=0; i<=1.01; i+=0.1f)
+	ofSetLineWidth(1);
+	for (float i=0; i<=1.01; i+=0.02f)
 	{
 		ofLine(0, i, 1, i);
 		ofLine(i, 0, i, 1);
@@ -51,11 +52,24 @@ void ProjectorCalibration::draw()
 	ofPopMatrix();
 }
 
+void ProjectorCalibration::begin()
+{
+	ofPushMatrix();
+	ofMultMatrix(toScreenMat);
+	ofMultMatrix(projectionMat);
+}
+
+void ProjectorCalibration::end()
+{
+	ofPopMatrix();
+}
+
 
 void ProjectorCalibration::calcProjectionMatrix()
 {
 	cv::Point2f dst[4];
 	cv::Point2f src[4];
+
 	for (int i=0; i<4; i++) {
 		dst[i] = cv::Point2f(points[i].x, points[i].y);
 	}
@@ -74,8 +88,7 @@ void ProjectorCalibration::calcProjectionMatrix()
 		0, 0, 1, 0,
 		mat.at<double>(0,2), mat.at<double>(1, 2), 0, mat.at<double>(2, 2));
 
-	printf("Projection Matrix:\n");
-	printMatrix(projectionMat);
+//	printMatrix(projectionMat);
 //	cout<<"projection matrix = "<<projectionMat<<endl;
 }
 
@@ -116,6 +129,11 @@ ofVec2f ProjectorCalibration::toLocal(const ofVec2f& p)
 	return  (ofVec3f)p * toScreenMat.getInverse();
 }
 
+ofVec2f ProjectorCalibration::toWorld(const ofVec2f& p)
+{
+	return (ofVec3f)p * toScreenMat.getInverse() * projectionMat.getInverse();
+}
+
 ofVec2f ProjectorCalibration::getProj(const ofVec2f &p)
 {
 	return (ofVec3f)p * projectionMat;
@@ -124,6 +142,8 @@ ofVec2f ProjectorCalibration::getProj(const ofVec2f &p)
 
 void ProjectorCalibration::printMatrix(const ofMatrix4x4 &mat)
 {
+	printf("Projection Matrix:\n");
+
 	printf("\t\t%.04f\t\t%.04f\t\t%.04f\t\t%.04f\n",
 		   mat.getRowAsVec4f(0).x,
 		   mat.getRowAsVec4f(0).y,

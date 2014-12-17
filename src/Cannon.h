@@ -12,20 +12,20 @@
 #include <stdio.h>
 #include "ofMain.h"
 
-class Cannon : public ofNode
+class Cannon
 {
 public:
-
 	void setup();
+//	void setup(float x, float y);
 
 
 	void update(float dt);
 	void draw();
 
 private:
-	ofVec2f pos;
 	float length;
-	float angle;
+
+	vector<ofVec2f> circles;
 };
 
 

@@ -23,11 +23,19 @@ public:
 	void update();
 	void draw();
 
+	vector<ofVec3f> getForcePoints();
 	float getMaxForce() { return maxForce; }
 	ofVec2f getCenterOfMass() { return centerOfMass; }
 
+	int getNRows() { return nRows; }
+	int getNCols() { return nCols; }
+
+	ofEvent<void> eventNewFrame;
+	
 private:
 	bool bHasDevice;
+	int nRows;
+	int nCols;
 	ofxTactonic device;
 	TactonicFrame *frame;
 

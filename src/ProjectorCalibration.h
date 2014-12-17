@@ -22,11 +22,15 @@ public:
 
 	void draw();
 
+	void begin();
+	void end();
+
 	void mouseDown(int x, int y);
 	void mouseDrag(int x, int y);
 	void mouseUp(int x, int y);
 
 	ofVec2f toLocal(const ofVec2f& p);
+	ofVec2f toWorld(const ofVec2f& p);
 
 private:
 

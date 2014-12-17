@@ -22,6 +22,8 @@
 		2A01EF4119EF12F1003665FC /* libTactonicTouch.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 2A01EF3619EF12F1003665FC /* libTactonicTouch.dylib */; };
 		2A01EF4219EF12F1003665FC /* ofxTactonic.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2A01EF3819EF12F1003665FC /* ofxTactonic.cpp */; };
 		2A346B021A28D640009FF480 /* ProjectorCalibration.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2A346B001A28D640009FF480 /* ProjectorCalibration.cpp */; };
+		2AA622EA1A38ED3E00F9836F /* Mattress.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2AA622E81A38ED3E00F9836F /* Mattress.cpp */; };
+		2AA622FB1A41D7BB00F9836F /* Platforms.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2AA622F91A41D7BB00F9836F /* Platforms.cpp */; };
 		2AB73F291A1D255200C395A7 /* TactonicInput.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2AB73F271A1D255200C395A7 /* TactonicInput.cpp */; };
 		2AB73F2C1A1D48CA00C395A7 /* TheGame.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2AB73F2A1A1D48CA00C395A7 /* TheGame.cpp */; };
 		2AB73F2F1A1D497400C395A7 /* Cannon.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2AB73F2D1A1D497400C395A7 /* Cannon.cpp */; };
@@ -161,6 +163,10 @@
 		2A01EF3919EF12F1003665FC /* ofxTactonic.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ofxTactonic.h; sourceTree = "<group>"; };
 		2A346B001A28D640009FF480 /* ProjectorCalibration.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ProjectorCalibration.cpp; sourceTree = "<group>"; };
 		2A346B011A28D640009FF480 /* ProjectorCalibration.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ProjectorCalibration.h; sourceTree = "<group>"; };
+		2AA622E81A38ED3E00F9836F /* Mattress.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Mattress.cpp; sourceTree = "<group>"; };
+		2AA622E91A38ED3E00F9836F /* Mattress.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Mattress.h; sourceTree = "<group>"; };
+		2AA622F91A41D7BB00F9836F /* Platforms.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Platforms.cpp; sourceTree = "<group>"; };
+		2AA622FA1A41D7BB00F9836F /* Platforms.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Platforms.h; sourceTree = "<group>"; };
 		2AB73F271A1D255200C395A7 /* TactonicInput.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = TactonicInput.cpp; sourceTree = "<group>"; };
 		2AB73F281A1D255200C395A7 /* TactonicInput.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TactonicInput.h; sourceTree = "<group>"; };
 		2AB73F2A1A1D48CA00C395A7 /* TheGame.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = TheGame.cpp; sourceTree = "<group>"; };
@@ -993,6 +999,10 @@
 				2AB73F2E1A1D497400C395A7 /* Cannon.h */,
 				2A346B001A28D640009FF480 /* ProjectorCalibration.cpp */,
 				2A346B011A28D640009FF480 /* ProjectorCalibration.h */,
+				2AA622E81A38ED3E00F9836F /* Mattress.cpp */,
+				2AA622E91A38ED3E00F9836F /* Mattress.h */,
+				2AA622F91A41D7BB00F9836F /* Platforms.cpp */,
+				2AA622FA1A41D7BB00F9836F /* Platforms.h */,
 			);
 			path = src;
 			sourceTree = SOURCE_ROOT;
@@ -1145,6 +1155,7 @@
 				181852019B0A9DEA7D78D274 /* ofxPanel.cpp in Sources */,
 				2AB73F291A1D255200C395A7 /* TactonicInput.cpp in Sources */,
 				EE0AFEED578C90CDB485FBB7 /* ofxSlider.cpp in Sources */,
+				2AA622FB1A41D7BB00F9836F /* Platforms.cpp in Sources */,
 				0B79D1370C521A99743B84F8 /* ofxSliderGroup.cpp in Sources */,
 				2A01EF4219EF12F1003665FC /* ofxTactonic.cpp in Sources */,
 				FBA20CC9B0626C7D5A9D5F9C /* ofxToggle.cpp in Sources */,
@@ -1182,6 +1193,7 @@
 				2AB73F2C1A1D48CA00C395A7 /* TheGame.cpp in Sources */,
 				FDED79F9E1B9BBFD309F46F8 /* ofxVectorGraphics.cpp in Sources */,
 				C2C390F91D824F2B7CA3B02D /* CreEPS.cpp in Sources */,
+				2AA622EA1A38ED3E00F9836F /* Mattress.cpp in Sources */,
 				7EFCFE727D9DE492780174E1 /* ofxXmlSettings.cpp in Sources */,
 				A5BF54CACA9C2F0BA2DB1131 /* tinyxml.cpp in Sources */,
 				8E4B38BFD068409CC33E8EF4 /* tinyxmlerror.cpp in Sources */,
