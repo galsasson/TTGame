@@ -24,6 +24,8 @@ bool TactonicInput::setup()
 	nCols = device.getWidth();
 	nRows = device.getHeight();
 
+	cout<<"Tactonic Input: "<<nCols<<"x"<<nRows<<endl;
+
 //	allocateFbo();
 
 	device.start();
@@ -82,8 +84,9 @@ void TactonicInput::onTactonicFrame(TactonicFrameEvent &evt)
 	device.copyFrame(evt.frame, frame);
 	mutex.unlock();
 
+	userLock.lock();
 	float max = 0;
-	float totalForce;
+	totalForce = 0;
 	centerOfMass.set(0, 0);
 
 	for (int y=0; y<frame->rows; y++) {
@@ -103,6 +106,8 @@ void TactonicInput::onTactonicFrame(TactonicFrameEvent &evt)
 
 	maxForce = max;
 	centerOfMass /= totalForce;
+	
+	userLock.unlock();
 
 	ofNotifyEvent(eventNewFrame);
 }

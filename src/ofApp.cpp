@@ -46,7 +46,14 @@ void ofApp::draw()
 {
 	ofBackground(0);
 
+	ofPushMatrix();
+
+	ofTranslate(0, ofGetWindowHeight(), 0);
+	ofScale(1, -1, 1);
+
 	game.draw();
+
+	ofPopMatrix();
 }
 
 
@@ -61,7 +68,7 @@ void ofApp::keyPressed(int key){
 	else if (key == ' ') {
 		bRunning = !bRunning;
 		if (bRunning) {
-			game.setSpeed(1000);
+			game.setSpeed(2500);
 		}
 		else {
 			game.setSpeed(0);

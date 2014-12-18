@@ -35,6 +35,11 @@ public:
 	void setupParams();
 private:
 	TactonicInput* tactonic;
+
+	float prevX;
+
+	float getNormalizedX();
+	float getXForce();
 	
 	ofNode camTargetNode;
 

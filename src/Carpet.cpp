@@ -8,7 +8,7 @@
 
 #include "Carpet.h"
 #include "ofxRemoteUIServer.h"
-
+#include "Constants.h"
 
 void Carpet::setup(TactonicInput* tt)
 {
@@ -17,7 +17,7 @@ void Carpet::setup(TactonicInput* tt)
 	setPosition(0, 0, 0);
 
 	camTargetNode.setParent(*this);
-	camTargetNode.setPosition(0, 0, 100);
+	camTargetNode.setPosition(0, 0, 50);
 
 	acc = ofVec3f(0, 0, 0);
 	vel = ofVec3f(0, 0, 0);
@@ -32,16 +32,63 @@ void Carpet::applyForce(const ofVec3f &f)
 	acc += f;
 }
 
+float Carpet::getNormalizedX()
+{
+#ifdef FLOOR_SENSOR
+	float hor = tactonic->getCenterOfMass().y;
+	return ofMap(hor, 0, tactonic->getNRows(), 0, 1);
+#else
+	float hor = tactonic->getCenterOfMass().x;
+	return ofMap(hor, 0, tactonic->getNCols(), 0, 1);
+#endif
+}
+
+float Carpet::getXForce()
+{
+	if (tactonic->getTotalForce() < 10) {
+		return 0;
+	}
+
+	float x = getNormalizedX();
+
+//	cout<<"center of mass = "<<tactonic->getCenterOfMass()<<endl;
+
+
+//	return ofMap(x, 0, 1, -1000, 1000);
+
+	float t = abs(x*2-1);
+	float nf = (x<0.5)?-pow(t, 2):pow(t, 2);
+	float f = ofMap(nf, -1, 1, 2000, -2000);
+
+	cout<<"x = "<<x<<", t = "<<t<<", nf = "<<nf<<", f = "<<f<<endl;
+
+	return f;
+}
+
 void Carpet::update(float dt)
 {
 	updateParams();
 
-	// calculate force
+#define ABSOLUTE_POS
+#ifdef ABSOLUTE_POS
+	float targetX = ofMap(getNormalizedX(), 0, 1, 1400, -1400);
+	setPosition(getX() + (targetX-prevX)*0.15f, getY(), getZ());
+	prevX = getX();
 	float xForce = 0;
-	float hor = tactonic->getCenterOfMass().x;
-	cout<<"center of mass = "<<tactonic->getCenterOfMass()<<endl;
-	xForce = ofMap(hor, 0, tactonic->getNCols(), 1000, -1000);
+#else
+	// calculate force
+	float xForce = getXForce();
 
+	if (getX() < -1000 &&
+		xForce < 0) {
+
+		xForce = 0;
+	}
+	else if (getX() > 1000 &&
+			 xForce > 0) {
+		xForce = 0;
+	}
+#endif
 	vel += ofVec3f(xForce, 0, forwardSpeed);
 	vel.limit(forwardSpeed);
 
@@ -58,7 +105,7 @@ void Carpet::draw()
 
 
 	ofFill();
-	ofSetColor(50);
+	ofSetColor(255);
 
 	carpetFbo.getTextureReference().bind();
 
@@ -81,8 +128,8 @@ void Carpet::createCarpetGeometry()
 
 	verts.push_back(ofVec3f(-100, 0, 0));
 	verts.push_back(ofVec3f(100, 0, 0));
-	verts.push_back(ofVec3f(-100, 0, -400));
-	verts.push_back(ofVec3f(100, 0, -400));
+	verts.push_back(ofVec3f(-100, 0, -200));
+	verts.push_back(ofVec3f(100, 0, -200));
 
 	normals.push_back(ofVec3f(0, 1, 0));
 	normals.push_back(ofVec3f(0, 1, 0));
@@ -91,8 +138,8 @@ void Carpet::createCarpetGeometry()
 
 	texCoords.push_back(ofVec2f(512, 0));
 	texCoords.push_back(ofVec2f(0, 0));
-	texCoords.push_back(ofVec2f(512, 2048));
-	texCoords.push_back(ofVec2f(0, 2048));
+	texCoords.push_back(ofVec2f(512, 1024));
+	texCoords.push_back(ofVec2f(0, 1024));
 
 	indices.push_back(2);
 	indices.push_back(1);
@@ -110,22 +157,18 @@ void Carpet::createCarpetGeometry()
 
 void Carpet::createCarpetTexture()
 {
-	carpetFbo.allocate(512, 2048, GL_RGBA);
+	carpetFbo.allocate(512, 1024, GL_RGBA);
 }
 
 void Carpet::renderCarpetTexture()
 {
 	carpetFbo.begin();
-	ofClear(128, 0, 128, 255);
+	ofClear(255, 255, 255, 255);
 
-
-	ofSetColor(200, 0, 0);
+	ofSetColor(50, 0, 200);
 	ofFill();
-	ofRect(50, 50, 50, 50);
-
-	ofSetColor(0, 200, 0);
-	ofFill();
-	ofRect(carpetFbo.getWidth()-100, carpetFbo.getHeight()-100, 50, 50);
+	ofEllipse(carpetFbo.getWidth()*0.2, carpetFbo.getHeight()*0.9, carpetFbo.getWidth()*0.17, carpetFbo.getWidth()*0.17);
+	ofEllipse(carpetFbo.getWidth()*0.8, carpetFbo.getHeight()*0.9, carpetFbo.getWidth()*0.17, carpetFbo.getWidth()*0.17);
 
 	carpetFbo.end();
 }

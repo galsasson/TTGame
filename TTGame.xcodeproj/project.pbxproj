@@ -32,6 +32,7 @@
 		2AA624081A42081800F9836F /* ofxRemoteUINeigbors.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2AA623CD1A42081700F9836F /* ofxRemoteUINeigbors.cpp */; };
 		2AA624091A42081800F9836F /* ofxRemoteUIServer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2AA623CF1A42081700F9836F /* ofxRemoteUIServer.cpp */; };
 		2AA6240A1A42081800F9836F /* uriencode.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2AA623D51A42081700F9836F /* uriencode.cpp */; };
+		2AA6241E1A426DCF00F9836F /* FlyingObjectPiece.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2AA6241C1A426DCF00F9836F /* FlyingObjectPiece.cpp */; };
 		2AB73F291A1D255200C395A7 /* TactonicInput.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2AB73F271A1D255200C395A7 /* TactonicInput.cpp */; };
 		2AB73F2C1A1D48CA00C395A7 /* TheGame.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2AB73F2A1A1D48CA00C395A7 /* TheGame.cpp */; };
 		2AB73F2F1A1D497400C395A7 /* Cannon.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2AB73F2D1A1D497400C395A7 /* Cannon.cpp */; };
@@ -196,6 +197,9 @@
 		2AA623D41A42081700F9836F /* TinyPie.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TinyPie.h; sourceTree = "<group>"; };
 		2AA623D51A42081700F9836F /* uriencode.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = uriencode.cpp; sourceTree = "<group>"; };
 		2AA623D61A42081700F9836F /* uriencode.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = uriencode.h; sourceTree = "<group>"; };
+		2AA6241B1A42615B00F9836F /* Constants.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Constants.h; sourceTree = "<group>"; };
+		2AA6241C1A426DCF00F9836F /* FlyingObjectPiece.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = FlyingObjectPiece.cpp; sourceTree = "<group>"; };
+		2AA6241D1A426DCF00F9836F /* FlyingObjectPiece.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FlyingObjectPiece.h; sourceTree = "<group>"; };
 		2AB73F271A1D255200C395A7 /* TactonicInput.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = TactonicInput.cpp; sourceTree = "<group>"; };
 		2AB73F281A1D255200C395A7 /* TactonicInput.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TactonicInput.h; sourceTree = "<group>"; };
 		2AB73F2A1A1D48CA00C395A7 /* TheGame.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = TheGame.cpp; sourceTree = "<group>"; };
@@ -1078,6 +1082,9 @@
 				2AA623001A41FDA500F9836F /* Carpet.h */,
 				2AA623031A41FE9500F9836F /* FlyingObject.cpp */,
 				2AA623041A41FE9500F9836F /* FlyingObject.h */,
+				2AA6241C1A426DCF00F9836F /* FlyingObjectPiece.cpp */,
+				2AA6241D1A426DCF00F9836F /* FlyingObjectPiece.h */,
+				2AA6241B1A42615B00F9836F /* Constants.h */,
 			);
 			path = src;
 			sourceTree = SOURCE_ROOT;
@@ -1282,6 +1289,7 @@
 				7EFCFE727D9DE492780174E1 /* ofxXmlSettings.cpp in Sources */,
 				A5BF54CACA9C2F0BA2DB1131 /* tinyxml.cpp in Sources */,
 				8E4B38BFD068409CC33E8EF4 /* tinyxmlerror.cpp in Sources */,
+				2AA6241E1A426DCF00F9836F /* FlyingObjectPiece.cpp in Sources */,
 				AB8A4587A21CD2325D587E8A /* tinyxmlparser.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

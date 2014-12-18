@@ -26,8 +26,9 @@ public:
 	void draw();
 
 	vector<ofVec3f> getForcePoints();
-	float getMaxForce() { return maxForce; }
-	ofVec2f getCenterOfMass() { return centerOfMass; }
+	float getMaxForce() { userLock.lock(); float val = maxForce; userLock.unlock(); return val;}
+	float getTotalForce() { userLock.lock(); float val = totalForce; userLock.unlock(); return val;}
+	ofVec2f getCenterOfMass() { userLock.lock(); ofVec2f c = centerOfMass; userLock.unlock(); return c;}
 
 	int getNRows() { return nRows; }
 	int getNCols() { return nCols; }
@@ -44,9 +45,11 @@ private:
 	void onTactonicFrame(TactonicFrameEvent& evt);
 
 	float maxForce;
+	float totalForce;
 	ofVec2f centerOfMass;
 
 	ofMutex mutex;
+	ofMutex userLock;
 	
 	void renderFbo(TactonicFrame* frame);
 	void allocateFbo();

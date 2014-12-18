@@ -37,6 +37,8 @@ private:
 
 	vector<ofVec3f> dust;
 
+	ofNode camXRotNode;
+	ofNode camYRotNode;
 	ofCamera cam;
 	ofLight light;
 
@@ -45,6 +47,7 @@ private:
 	// params
 	void updateParams();
 	ofVec3f camPos;
+	ofVec3f camRotation;
 	ofVec3f lightOffset;
 
 	void createWorldGeometry();

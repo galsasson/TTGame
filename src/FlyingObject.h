@@ -11,6 +11,7 @@
 
 #include <stdio.h>
 #include "ofMain.h"
+#include "FlyingObjectPiece.h"
 
 class FlyingObject : public ofNode
 {
@@ -23,13 +24,21 @@ public:
 
 	void setup(float x, float y, float z, Type t);
 
+	void explode();
+
 	void update(float dt);
 	void draw();
 
+	bool isAlive() { return bAlive; }
 
 private:
 
+	bool bAlive;
 
+	bool bExploding;
+	float explodeCounter;
+
+	vector<FlyingObjectPiece*> pieces;
 
 };
 

@@ -8,6 +8,7 @@
 
 #include "GameWorld.h"
 #include "ofxRemoteUIServer.h"
+#include "Constants.h"
 
 GameWorld::~GameWorld()
 {
@@ -22,10 +23,19 @@ void GameWorld::setup()
 
 	carpet.setup(tactonic);
 
-	cam.setPosition(camPos);
-	cam.setParent(carpet);
+	camXRotNode.setParent(carpet);
+	camYRotNode.setParent(camXRotNode);
+//	camYRotNode.rotate(180, ofVec3f(0, 1, 0));
+	cam.setPosition(0, 0, camPos.z);
+	cam.setParent(camYRotNode);
+//	cam.lookAt(ofVec3f(0, 0, 0), ofVec3f(0, 1, 0));
 	cam.lookAt(carpet.getCamTarget(), ofVec3f(0, 1, 0));
 	cam.setFarClip(100000);
+	cam.setFov(100);
+
+#ifdef FLOOR_SENSOR
+	cam.roll(180);
+#endif
 
 	// light
 	lightOffset = ofVec3f(-100, 10000, 500);
@@ -40,7 +50,7 @@ void GameWorld::setup()
 
 	for (int i=0; i<100; i++) {
 		FlyingObject* fo = new FlyingObject();
-		fo->setup(ofRandom(-1000, 1000), 0, ofRandom(3000, 100000), FlyingObject::POINT);
+		fo->setup(ofRandom(-1000, 1000), 0, ofRandom(3000, 400000), FlyingObject::POINT);
 
 		flyingObjects.push_back(fo);
 	}
@@ -63,9 +73,27 @@ void GameWorld::update(float dt)
 
 	updateParams();
 
+	vector<int> deadObjects;
+
 	for (int i=0; i<flyingObjects.size(); i++)
 	{
 		flyingObjects[i]->update(dt);
+
+		if (flyingObjects[i]->getPosition().distance(carpet.getPosition()) < 100) {
+			cout<<"explode!!!"<<endl;
+			flyingObjects[i]->explode();
+		}
+
+		if (!flyingObjects[i]->isAlive() ||
+			flyingObjects[i]->getZ() < carpet.getZ()-300) {
+			deadObjects.push_back(i);
+		}
+	}
+
+	for (int i=deadObjects.size()-1; i>=0; i--)
+	{
+		delete flyingObjects[deadObjects[i]];
+		flyingObjects.erase(flyingObjects.begin() + deadObjects[i]);
 	}
 
 	for (int i=0; i<dust.size(); i++) {
@@ -93,14 +121,17 @@ void GameWorld::draw()
 
 	ofSetColor(200);
 	ofFill();
+	ofPushMatrix();
 	for (int i=0; i<dust.size(); i++) {
 		ofPushMatrix();
 		ofTranslate(dust[i]);
+		ofRotateX(270);
 
-		ofDrawPlane(0, 0, 10, 10);
+		ofDrawPlane(0, 0, 20, 50);
 
 		ofPopMatrix();
 	}
+	ofPopMatrix();
 
 
 	ofDrawAxis(1000);
@@ -122,6 +153,9 @@ void GameWorld::setupParams()
 	RUI_SHARE_PARAM(camPos.y, 0, 500);
 	RUI_SHARE_PARAM(camPos.z, -1000, 100);
 
+	RUI_SHARE_PARAM(camRotation.x, -180, 180);
+	RUI_SHARE_PARAM(camRotation.y, -180, 180);
+
 	carpet.setupParams();
 }
 
@@ -129,6 +163,9 @@ void GameWorld::setupParams()
 void GameWorld::updateParams()
 {
 	cam.setPosition(camPos);
+
+	camYRotNode.setOrientation(ofVec3f(0, camRotation.y, 0));
+	camXRotNode.setOrientation(ofVec3f(camRotation.x, 0, 0));
 //	cam.lookAt(carpet.getCamTarget(), carpet.getGlobalPosition() + ofVec3f(0, 1, 0));
 	light.setPosition(carpet.getGlobalPosition() + lightOffset);
 }
