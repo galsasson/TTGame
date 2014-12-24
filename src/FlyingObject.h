@@ -19,7 +19,8 @@ public:
 
 	enum Type {
 		BARRIER,
-		POINT
+		POINT,
+		BULLET
 	} type;
 
 	void setup(float x, float y, float z, Type t);
@@ -30,9 +31,13 @@ public:
 	void draw();
 
 	bool isAlive() { return bAlive; }
+	bool isExploding() { return bExploding; }
 
 private:
 
+	ofColor color;
+	ofColor getColor();
+	
 	bool bAlive;
 
 	bool bExploding;

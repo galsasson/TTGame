@@ -9,6 +9,6 @@
 #ifndef TTGame_Constants_h
 #define TTGame_Constants_h
 
-#define FLOOR_SENSOR
+//#define FLOOR_SENSOR
 
 #endif

@@ -22,9 +22,29 @@ void Carpet::setup(TactonicInput* tt)
 	acc = ofVec3f(0, 0, 0);
 	vel = ofVec3f(0, 0, 0);
 
+	life = 3;
+	bExploding = false;
+	bHit = false;
+
 	createCarpetGeometry();
 	createCarpetTexture();
 	renderCarpetTexture();
+}
+
+void Carpet::hit()
+{
+	life--;
+	bHit = true;
+	bHitCounter = 1;
+
+	if (life == 0) {
+		explode();
+	}
+}
+
+void Carpet::explode()
+{
+	bExploding = true;
 }
 
 void Carpet::applyForce(const ofVec3f &f)
@@ -36,10 +56,10 @@ float Carpet::getNormalizedX()
 {
 #ifdef FLOOR_SENSOR
 	float hor = tactonic->getCenterOfMass().y;
-	return ofMap(hor, 0, tactonic->getNRows(), 0, 1);
+	return ofMap(hor, 0, tactonic->getNRows()-1, 0, 1);
 #else
 	float hor = tactonic->getCenterOfMass().x;
-	return ofMap(hor, 0, tactonic->getNCols(), 0, 1);
+	return ofMap(hor, 0, tactonic->getNCols()-1, 0, 1);
 #endif
 }
 
@@ -89,12 +109,27 @@ void Carpet::update(float dt)
 		xForce = 0;
 	}
 #endif
+
+	if (didExplode()) {
+		forwardSpeed = 0;
+	}
+
 	vel += ofVec3f(xForce, 0, forwardSpeed);
 	vel.limit(forwardSpeed);
 
 	move(vel*dt);
 
 	acc *= 0;
+
+	// update hit counter
+	if (bHit) {
+		bHitCounter-=dt;
+		if (bHitCounter < 0) {
+			bHit = false;
+		}
+	}
+	
+	renderCarpetTexture();
 }
 
 void Carpet::draw()
@@ -163,7 +198,14 @@ void Carpet::createCarpetTexture()
 void Carpet::renderCarpetTexture()
 {
 	carpetFbo.begin();
-	ofClear(255, 255, 255, 255);
+
+	if (bExploding || bHit) {
+		float coeff = abs(sin(0.1f*ofGetFrameNum()));
+		ofClear(255, 255*coeff, 255*coeff, 255);
+	}
+	else {
+		ofClear(255, 255, 255, 255);
+	}
 
 	ofSetColor(50, 0, 200);
 	ofFill();

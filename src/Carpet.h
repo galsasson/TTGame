@@ -23,6 +23,10 @@ public:
 
 	void setup(TactonicInput* tt);
 
+	void hit();
+	void explode();
+	bool didExplode() { return bExploding; }
+
 	void applyForce(const ofVec3f& f);
 	ofNode& getCamTarget() { return camTargetNode; }
 
@@ -62,6 +66,12 @@ private:
 	void updateParams();
 //	ofVec2f points[4];
 	ofVec3f targetNodePos;
+
+	//
+	int life;
+	bool bHit;
+	float bHitCounter;
+	bool bExploding;
 
 };
 #endif /* defined(__TTGame__Carpet__) */

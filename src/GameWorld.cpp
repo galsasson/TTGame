@@ -48,13 +48,22 @@ void GameWorld::setup()
 	light.lookAt(ofVec3f(0, 0, 0));
 
 
+	// create flying objects
 	for (int i=0; i<100; i++) {
 		FlyingObject* fo = new FlyingObject();
-		fo->setup(ofRandom(-1000, 1000), 0, ofRandom(3000, 400000), FlyingObject::POINT);
+		FlyingObject::Type t;
+		if (ofRandom(1) < 0.3f) {
+			t = FlyingObject::BARRIER;
+		}
+		else {
+			t = FlyingObject::POINT;
+		}
+		fo->setup(ofRandom(-1000, 1000), 0, ofRandom(3000, 400000), t);
 
 		flyingObjects.push_back(fo);
 	}
 
+	// creat dust
 	for (int i=0; i<200; i++) {
 		dust.push_back(ofVec3f(ofRandom(-1000, 1000), ofRandom(-300, 0), ofRandom(0, 10000)));
 	}
@@ -77,17 +86,36 @@ void GameWorld::update(float dt)
 
 	for (int i=0; i<flyingObjects.size(); i++)
 	{
-		flyingObjects[i]->update(dt);
+		FlyingObject* fo = flyingObjects[i];
 
-		if (flyingObjects[i]->getPosition().distance(carpet.getPosition()) < 100) {
-			cout<<"explode!!!"<<endl;
-			flyingObjects[i]->explode();
+		fo->update(dt);
+
+		if (!fo->isExploding() &&
+			fo->getPosition().distance(carpet.getPosition()) < 100)
+		{
+			if (fo->type == FlyingObject::POINT ||
+				fo->type == FlyingObject::BARRIER) {
+				cout<<"explode!!!"<<endl;
+				fo->explode();
+			}
+
+			if (fo->type == FlyingObject::BARRIER) {
+				carpet.hit();
+			}
 		}
 
-		if (!flyingObjects[i]->isAlive() ||
-			flyingObjects[i]->getZ() < carpet.getZ()-300) {
+		if (!fo->isAlive()) {
 			deadObjects.push_back(i);
 		}
+
+		// push forward if we missed it
+		if (fo->getZ() < carpet.getZ()-300 &&
+			!fo->isExploding())
+		{
+			fo->setPosition(fo->getPosition() + ofVec3f(0, 0, 10000));
+		}
+
+
 	}
 
 	for (int i=deadObjects.size()-1; i>=0; i--)

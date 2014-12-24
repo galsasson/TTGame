@@ -18,7 +18,7 @@ void FlyingObjectPiece::setup(float x, float y, float z, ofColor c)
 	flyRotation = ofVec3f(ofRandom(0, 100),
 						  ofRandom(0, 100),
 						  ofRandom(0, 100));
-	velocity = ofVec3f(x, y, z);
+	velocity = ofVec3f(x, y, z).getNormalized() * ofRandom(20, 60);
 
 }
 

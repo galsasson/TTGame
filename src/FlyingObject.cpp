@@ -16,16 +16,17 @@ void FlyingObject::setup(float x, float y, float z,FlyingObject::Type t)
 	type = t;
 	bAlive = true;
 	bExploding = false;
+	color = getColor();
 
 	// create pieces
-	for (float z=-BOX_SIZE/2; z<BOX_SIZE/2; z+=BOX_SIZE/8)
+	for (float z=-BOX_SIZE/2; z<BOX_SIZE/2; z+=BOX_SIZE/6)
 	{
-		for (float y=-BOX_SIZE/2; y<BOX_SIZE/2; y+=BOX_SIZE/8)
+		for (float y=-BOX_SIZE/2; y<BOX_SIZE/2; y+=BOX_SIZE/6)
 		{
-			for (float x=-BOX_SIZE/2; x<BOX_SIZE/2; x+=BOX_SIZE/8)
+			for (float x=-BOX_SIZE/2; x<BOX_SIZE/2; x+=BOX_SIZE/6)
 			{
 				FlyingObjectPiece* fop = new FlyingObjectPiece();
-				fop->setup(x, y, z, ofColor(0, 200, 0));
+				fop->setup(x, y, z, color);
 				pieces.push_back(fop);
 			}
 		}
@@ -35,7 +36,7 @@ void FlyingObject::setup(float x, float y, float z,FlyingObject::Type t)
 void FlyingObject::explode()
 {
 	bExploding = true;
-	explodeCounter = 3;
+	explodeCounter = 0.5f;
 }
 
 void FlyingObject::update(float dt)
@@ -60,15 +61,7 @@ void FlyingObject::draw()
 	ofMultMatrix(getLocalTransformMatrix());
 
 	ofFill();
-
-	switch (type) {
-		case BARRIER:
-			ofSetColor(200, 0, 0);
-			break;
-		case POINT:
-			ofSetColor(0, 200, 0);
-			break;
-	}
+	ofSetColor(color);
 
 	if (bExploding) {
 		for (int i=0; i<pieces.size(); i++)
@@ -77,11 +70,27 @@ void FlyingObject::draw()
 		}
 	}
 	else {
-		ofDrawBox(0, 0, 0, BOX_SIZE, BOX_SIZE, BOX_SIZE);
+		if (type == BARRIER ||
+			type == POINT) {
+			ofDrawBox(0, 0, 0, BOX_SIZE, BOX_SIZE, BOX_SIZE);
+		}
+		else {
+			ofDrawSphere(0, 0, BOX_SIZE);
+		}
 	}
 
 	ofPopMatrix();
 }
 
-
+ofColor FlyingObject::getColor()
+{
+	switch (type) {
+		case BARRIER:
+			return ofColor(200, 0, 0);
+		case POINT:
+			return ofColor(0, 200, 0);
+		case BULLET:
+			return ofColor(200, 200, 0);
+	}
+}
 
