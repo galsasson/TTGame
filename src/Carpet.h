@@ -27,6 +27,13 @@ public:
 	void explode();
 	bool didExplode() { return bExploding; }
 
+	void takeBullet();
+	void shootBullet();
+
+	bool isShooting() { return bShootingBullet; }
+
+	bool isFootDown();
+
 	void applyForce(const ofVec3f& f);
 	ofNode& getCamTarget() { return camTargetNode; }
 
@@ -38,9 +45,8 @@ public:
 
 	void setupParams();
 private:
-	TactonicInput* tactonic;
 
-	float prevX;
+	float targetX;
 
 	float getNormalizedX();
 	float getXForce();
@@ -50,9 +56,12 @@ private:
 	ofVec3f acc;
 	ofVec3f vel;
 
+	bool bLeftFootDown;
+	bool bRightFootDown;
 	float forwardSpeed;
 
 
+	void updateForces();
 
 	// geometry
 	void createCarpetGeometry();
@@ -64,7 +73,7 @@ private:
 	
 	// params
 	void updateParams();
-//	ofVec2f points[4];
+	float balanceSensitivity;
 	ofVec3f targetNodePos;
 
 	//
@@ -72,6 +81,15 @@ private:
 	bool bHit;
 	float bHitCounter;
 	bool bExploding;
+
+	bool bHasBullet;
+	bool bShootingBullet;
+	float bulletShotCounter;
+
+
+	TactonicInput* tactonic;
+
+
 
 };
 #endif /* defined(__TTGame__Carpet__) */

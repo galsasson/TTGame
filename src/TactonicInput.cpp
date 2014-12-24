@@ -10,29 +10,31 @@
 
 bool TactonicInput::setup()
 {
-	device.init();
-	if (device.getWidth() <= 0) {
+	device = new ofxTactonic();
+
+	device->init();
+	if (device->getWidth() <= 0) {
 		bHasDevice = false;
 		nRows = -1;
 		nCols = -1;
 		return false;
 	}
 
-	device.createFrame(&frame);
+	device->createFrame(&frame);
 	ofAddListener(ofxTactonic::eventNewFrame, this, &TactonicInput::onTactonicFrame);
 
-	nCols = device.getWidth();
-	nRows = device.getHeight();
+	nCols = device->getWidth();
+	nRows = device->getHeight();
 
 	cout<<"Tactonic Input: "<<nCols<<"x"<<nRows<<endl;
 
 //	allocateFbo();
 
-	device.start();
-
 	maxForce = 0;
 	centerOfMass = ofVec2f();
 	bHasDevice = true;
+
+	device->start();
 
 	return true;
 }
@@ -40,7 +42,7 @@ bool TactonicInput::setup()
 void TactonicInput::stop()
 {
 	ofRemoveListener(ofxTactonic::eventNewFrame, this, &TactonicInput::onTactonicFrame);
-	device.stop();
+	device->stop();
 }
 
 vector<ofVec3f> TactonicInput::getForcePoints()
@@ -75,13 +77,13 @@ void TactonicInput::draw()
 		return;
 	}
 
-	forceFbo.draw(0, 0);
+//	forceFbo.draw(0, 0);
 }
 
 void TactonicInput::onTactonicFrame(TactonicFrameEvent &evt)
 {
 	mutex.lock();
-	device.copyFrame(evt.frame, frame);
+	device->copyFrame(evt.frame, frame);
 	mutex.unlock();
 
 	userLock.lock();
@@ -112,7 +114,7 @@ void TactonicInput::onTactonicFrame(TactonicFrameEvent &evt)
 	ofNotifyEvent(eventNewFrame);
 }
 
-
+#if 0
 void TactonicInput::renderFbo(TactonicFrame* frame)
 {
 	mutex.lock();
@@ -134,5 +136,6 @@ void TactonicInput::renderFbo(TactonicFrame* frame)
 
 void TactonicInput::allocateFbo()
 {
-	forceFbo.allocate(device.getWidth(), device.getHeight());
+	forceFbo.allocate(device->getWidth(), device->getHeight());
 }
+#endif

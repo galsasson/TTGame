@@ -12,14 +12,14 @@
 void FlyingObjectPiece::setup(float x, float y, float z, ofColor c)
 {
 	setPosition(x, y, z);
+	size = ofVec3f(10, 10, 10);
 
 	color = c;
 
 	flyRotation = ofVec3f(ofRandom(0, 100),
 						  ofRandom(0, 100),
 						  ofRandom(0, 100));
-	velocity = ofVec3f(x, y, z).getNormalized() * ofRandom(20, 60);
-
+	setVelocity(ofVec3f(x, y, z).getNormalized() * ofRandom(20, 60));
 }
 
 void FlyingObjectPiece::update(float dt)
@@ -38,7 +38,7 @@ void FlyingObjectPiece::draw()
 
 	ofFill();
 	ofSetColor(color);
-	ofDrawBox(0, 0, 0, 10, 10, 10);
+	ofDrawBox(0, 0, 0, size.x, size.y, size.z);
 
 	ofPopMatrix();
 }

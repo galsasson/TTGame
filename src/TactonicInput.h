@@ -39,7 +39,7 @@ private:
 	bool bHasDevice;
 	int nRows;
 	int nCols;
-	ofxTactonic device;
+	ofxTactonic* device;
 	TactonicFrame *frame;
 
 	void onTactonicFrame(TactonicFrameEvent& evt);
@@ -51,9 +51,9 @@ private:
 	ofMutex mutex;
 	ofMutex userLock;
 	
-	void renderFbo(TactonicFrame* frame);
-	void allocateFbo();
-	ofFbo forceFbo;
+//	void renderFbo(TactonicFrame* frame);
+//	void allocateFbo();
+//	ofFbo forceFbo;
 
 };
 #endif /* defined(__tacvis__TactonicInput__) */

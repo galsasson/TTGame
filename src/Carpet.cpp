@@ -16,15 +16,24 @@ void Carpet::setup(TactonicInput* tt)
 
 	setPosition(0, 0, 0);
 
-	camTargetNode.setParent(*this);
 	camTargetNode.setPosition(0, 0, 50);
+	camTargetNode.setParent(*this);
 
 	acc = ofVec3f(0, 0, 0);
 	vel = ofVec3f(0, 0, 0);
 
+	forwardSpeed = 0;
 	life = 3;
 	bExploding = false;
 	bHit = false;
+	bHasBullet = false;
+	bShootingBullet = false;
+	bulletShotCounter = 0;
+	targetX = 0;
+	balanceSensitivity = 0.2f;
+	bLeftFootDown = bRightFootDown = false;
+//	prevX = getX();
+
 
 	createCarpetGeometry();
 	createCarpetTexture();
@@ -46,6 +55,29 @@ void Carpet::explode()
 {
 	bExploding = true;
 }
+
+void Carpet::takeBullet()
+{
+	bHasBullet = true;
+}
+
+void Carpet::shootBullet()
+{
+	if (!bHasBullet ||
+		bShootingBullet) {
+		return;
+	}
+
+	bHasBullet = false;
+	bShootingBullet = true;
+	bulletShotCounter = 0.1f;
+}
+
+bool Carpet::isFootDown()
+{
+	return bLeftFootDown || bRightFootDown;
+}
+
 
 void Carpet::applyForce(const ofVec3f &f)
 {
@@ -85,36 +117,64 @@ float Carpet::getXForce()
 	return f;
 }
 
+void Carpet::updateForces()
+{
+	vector<ofVec3f> forces = tactonic->getForcePoints();
+
+	float leftFootForce = 0;
+	float rightFootForce = 0;
+	float topForce = 0;
+
+	for (int i=0; i<forces.size(); i++)
+	{
+		if (forces[i].x > tactonic->getNCols()/2)
+		{
+			// front half of the mat
+			topForce += forces[i].z;
+		}
+		else {
+			// bottom half of the mat
+			if (forces[i].y > tactonic->getNRows()/2)
+			{
+				leftFootForce += forces[i].z;
+			}
+			else {
+				rightFootForce += forces[i].z;
+			}
+		}
+	}
+
+	if (topForce > 500)
+	{
+		shootBullet();
+	}
+
+	if (leftFootForce > 0 &&
+		rightFootForce > 0)
+	{
+
+		cout<<"leftFootForce-rightFootForce = "<<leftFootForce-rightFootForce<<endl;
+		
+		targetX = ofMap(leftFootForce-rightFootForce, -3500*(1-balanceSensitivity), 3500*(1-balanceSensitivity), -1000, 1000, true);
+	}
+
+	bLeftFootDown = leftFootForce > 0;
+	bRightFootDown = rightFootForce > 0;
+}
+
 void Carpet::update(float dt)
 {
 	updateParams();
 
-#define ABSOLUTE_POS
-#ifdef ABSOLUTE_POS
-	float targetX = ofMap(getNormalizedX(), 0, 1, 1400, -1400);
-	setPosition(getX() + (targetX-prevX)*0.15f, getY(), getZ());
-	prevX = getX();
-	float xForce = 0;
-#else
-	// calculate force
-	float xForce = getXForce();
+	updateForces();
 
-	if (getX() < -1000 &&
-		xForce < 0) {
-
-		xForce = 0;
-	}
-	else if (getX() > 1000 &&
-			 xForce > 0) {
-		xForce = 0;
-	}
-#endif
+	setPosition(getX() + (targetX-getX())*0.15f, getY(), getZ());
 
 	if (didExplode()) {
 		forwardSpeed = 0;
 	}
 
-	vel += ofVec3f(xForce, 0, forwardSpeed);
+	vel += ofVec3f(0, 0, forwardSpeed);
 	vel.limit(forwardSpeed);
 
 	move(vel*dt);
@@ -126,6 +186,14 @@ void Carpet::update(float dt)
 		bHitCounter-=dt;
 		if (bHitCounter < 0) {
 			bHit = false;
+		}
+	}
+
+
+	if (bShootingBullet) {
+		bulletShotCounter -= dt;
+		if (bulletShotCounter < 0) {
+			bShootingBullet = false;
 		}
 	}
 	
@@ -148,6 +216,18 @@ void Carpet::draw()
 
 	carpetFbo.getTextureReference().unbind();
 
+
+	if (bHasBullet) {
+		ofSetColor(200, 200, 0);
+		ofFill();
+		ofDrawSphere(0, 0, -50, 40);
+	}
+
+	if (bShootingBullet) {
+		ofSetColor(255, 255, 0);
+		ofFill();
+		ofDrawBox(0, 0, 2000, 60, 1, 4000);
+	}
 
 	ofPopMatrix();
 }
@@ -193,6 +273,9 @@ void Carpet::createCarpetGeometry()
 void Carpet::createCarpetTexture()
 {
 	carpetFbo.allocate(512, 1024, GL_RGBA);
+	carpetFbo.begin();
+	ofClear(0, 0, 0, 0);
+	carpetFbo.end();
 }
 
 void Carpet::renderCarpetTexture()
@@ -207,10 +290,30 @@ void Carpet::renderCarpetTexture()
 		ofClear(255, 255, 255, 255);
 	}
 
-	ofSetColor(50, 0, 200);
+	// draw left foot
 	ofFill();
-	ofEllipse(carpetFbo.getWidth()*0.2, carpetFbo.getHeight()*0.9, carpetFbo.getWidth()*0.17, carpetFbo.getWidth()*0.17);
-	ofEllipse(carpetFbo.getWidth()*0.8, carpetFbo.getHeight()*0.9, carpetFbo.getWidth()*0.17, carpetFbo.getWidth()*0.17);
+	if (bLeftFootDown) {
+		ofSetColor(255, 0, 200);
+	}
+	else {
+		ofSetColor(50, 0, 100);
+	}
+	ofRect(0, carpetFbo.getHeight()*0.5f, carpetFbo.getWidth()*0.5, carpetFbo.getHeight()*0.5f);
+
+
+	// draw right foot
+	if (bRightFootDown) {
+		ofSetColor(255, 0, 255);
+	}
+	else {
+		ofSetColor(50, 0, 100);
+	}
+	ofRect(carpetFbo.getWidth()*0.5f, carpetFbo.getHeight()*0.5f, carpetFbo.getWidth()*0.5, carpetFbo.getHeight()*0.5f);
+
+	ofSetLineWidth(4);
+	ofSetColor(255);
+	ofLine(0, carpetFbo.getHeight()*0.5, carpetFbo.getWidth(), carpetFbo.getHeight()*0.5f);
+	ofLine(carpetFbo.getWidth()*0.5f, carpetFbo.getHeight()*0.5f, carpetFbo.getWidth()*0.5f, carpetFbo.getHeight());
 
 	carpetFbo.end();
 }
@@ -224,6 +327,8 @@ void Carpet::setupParams()
 	RUI_SHARE_PARAM(targetNodePos.x, -50, 50);
 	RUI_SHARE_PARAM(targetNodePos.y, -100, 100);
 	RUI_SHARE_PARAM(targetNodePos.z, 0, 1000);
+
+	RUI_SHARE_PARAM(balanceSensitivity, 0.1f, 1);
 
 //	RUI_NEW_GROUP("Carpet Speed");
 

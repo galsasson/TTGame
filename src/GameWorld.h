@@ -13,6 +13,7 @@
 #include "ofMain.h"
 #include "Carpet.h"
 #include "FlyingObject.h"
+#include "Wall.h"
 
 class GameWorld
 {
@@ -32,8 +33,9 @@ public:
 private:
 	TactonicInput* tactonic;
 
-	Carpet carpet;
+	Carpet* carpet;
 	vector<FlyingObject*> flyingObjects;
+	vector<Wall*> walls;
 
 	vector<ofVec3f> dust;
 
@@ -42,6 +44,7 @@ private:
 	ofCamera cam;
 	ofLight light;
 
+	void createObjects();
 
 
 	// params
